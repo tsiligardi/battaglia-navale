@@ -7,7 +7,7 @@ const ships = []
 
 const W = process.argv[2] || 10
 const H = process.argv[3] || 10
-const S = 1//process.argv[4] || 10
+const S = 1// process.argv[4] || 10
 
 for (let y = 0; y < H; y++) {
   const row = []
@@ -18,8 +18,8 @@ for (let y = 0; y < H; y++) {
       y,
       ship: null,
       hit: false
-    })    
-  } 
+    })
+  }
   field.push(row)
 }
 
@@ -45,9 +45,8 @@ for (let i = 0; i < S; i++) {
 }
 
 
-
 app.get("/", ({ query: { format } }, res) => {
-  if ( format === "json") {
+  if (format === "json") {
     res.json(field)
   } else {
     // html format field
@@ -83,7 +82,7 @@ app.get("/score", (req, res) => {
   res.json([])
 })
 
-app.get("/fire", ({ query: { x, y, team } }, res) => {  
+app.get("/fire", ({ query: { x, y, team } }, res) => {
   res.json({
     x, y, team
   })
