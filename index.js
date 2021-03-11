@@ -1,13 +1,13 @@
 const express = require("express")
 const app = new express()
 const PORT = 8080
-
+const utils = require("./utils")
 const field = []
 const ships = []
 
 const W = process.argv[2] || 10
 const H = process.argv[3] || 10
-const S = 1// process.argv[4] || 10
+const S = process.argv[4] || 10
 
 for (let y = 0; y < H; y++) {
   const row = []
@@ -24,17 +24,40 @@ for (let y = 0; y < H; y++) {
 }
 
 for (let i = 0; i < S; i++) {
+  const maxHp = utils.randint(2, 4)
   const ship = {
-    id: "pino",
-    x: 3,
-    y: 3,
-    vertical: false,
-    maxHp: 4,
-    curHp: 4,
+    id: `ship_${i}`,
+    x: utils.randint(0, W - 1),
+    y: utils.randint(0, H - 1),
+    vertical: utils.randint(0, 1),
+    maxHp,
+    curHp: maxHp,
     alive: true,
     killTeam: null
   }
 
+  while (true) {
+    let count = 0
+    for (let e = 0; e < ship.maxHp; e++) {
+      const x = ship.vertical ? ship.x : ship.x + e
+      const y = ship.vertical ? ship.y + e : ship.y
+      if (x > (W - 1)  || y > (H - 1)) {
+        count += 1
+        break
+      } else {
+        if (utils.isAship(x, y, field)) {
+          console.log("SONO QUI")
+          count += 1
+        }
+      }
+    }
+    if (count === 0) {
+      break
+    } else {
+      ship.x = utils.randint(0, W - 1)
+      ship.y =  utils.randint(0, H - 1)
+    }
+  }
   ships.push(ship)
 
   for (let e = 0; e < ship.maxHp; e++) {
@@ -43,6 +66,7 @@ for (let i = 0; i < S; i++) {
     field[y][x].ship = ship
   }
 }
+console.log(ships)
 
 
 app.get("/", ({ query: { format } }, res) => {
@@ -69,7 +93,7 @@ app.get("/", ({ query: { format } }, res) => {
     <body>
       <table>
         <tbody>
-          ${field.map(row => `<tr>${row.map(cell => `<td>${cell.ship ? cell.ship.id : "acqua"}</td>`).join("")}</tr>`).join("")}
+          ${field.map(row => `<tr>${row.map(cell => `<td>${cell.ship ? cell.ship.id : "O"}</td>`).join("")}</tr>`).join("")}
         </tbody>
       </table>
     </body>
