@@ -1,10 +1,7 @@
-const isAship = (x, y, field) => {
-  if (field[x][y].ship) {
-    return true
-  } else {
-    return false
-  }
+const getShip = (x, y, field) => {
+  return field[x][y].ship
 }
+
 
 const randint = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min
@@ -12,6 +9,6 @@ const randint = (min, max) => {
 
 
 module.exports = {
-  isAship,
+  getShip,
   randint
 }

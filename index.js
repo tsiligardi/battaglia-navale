@@ -24,38 +24,38 @@ for (let y = 0; y < H; y++) {
 }
 
 for (let i = 0; i < S; i++) {
+  console.log(i)
   const maxHp = utils.randint(2, 4)
   const ship = {
     id: `ship_${i}`,
     x: utils.randint(0, W - 1),
     y: utils.randint(0, H - 1),
-    vertical: utils.randint(0, 1),
+    vertical: false,
     maxHp,
     curHp: maxHp,
     alive: true,
     killTeam: null
   }
-
   while (true) {
     let count = 0
     for (let e = 0; e < ship.maxHp; e++) {
       const x = ship.vertical ? ship.x : ship.x + e
       const y = ship.vertical ? ship.y + e : ship.y
-      if (x > (W - 1)  || y > (H - 1)) {
-        count += 1
-        break
-      } else {
-        if (utils.isAship(x, y, field)) {
-          console.log("SONO QUI")
+      if (x < W && y < H) {
+        if (utils.getShip(x, y, field)) {
           count += 1
+          console.log(field[x][y]) // non becca la nave quando mi trovo con le coordinate di partenza
         }
+      } else {
+        count += 1
       }
     }
+
     if (count === 0) {
       break
     } else {
       ship.x = utils.randint(0, W - 1)
-      ship.y =  utils.randint(0, H - 1)
+      ship.y = utils.randint(0, H - 1)
     }
   }
   ships.push(ship)
@@ -67,7 +67,7 @@ for (let i = 0; i < S; i++) {
   }
 }
 console.log(ships)
-
+// console.log(ships)
 
 app.get("/", ({ query: { format } }, res) => {
   if (format === "json") {
